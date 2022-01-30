@@ -1,0 +1,8 @@
+prefix=/home/jaden/differential_drive_robot/install
+
+Name: two_wheel_robot
+Description: Description of two_wheel_robot
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
