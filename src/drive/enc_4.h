@@ -1,6 +1,6 @@
 #define enc4Interrupt 5    //Interrupt pin number
 #define enc4PinA      18   //Arduino pin number corresponding to interrupt pin
-#define enc4PinB      50   //Digital pin number // Do not use pins 0, 1, 3, 8, 9, 11, 12, 13
+#define enc4PinB      7   //Digital pin number // Do not use pins 0, 1, 3, 8, 9, 11, 12, 13
 #define enc4Res       2048.0
 
 volatile long enc4Ticks = 0;  // Variable used to store encoder ticks
@@ -19,5 +19,5 @@ void enc4Setup()
 
 double getEnc4()
 {
-  return enc4Ticks*2*M_PI/enc4Res;
+  return enc4Ticks;
 }
