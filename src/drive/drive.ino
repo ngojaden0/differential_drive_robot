@@ -10,46 +10,63 @@
 
 #define MAX_VEL 0.05625
 #define MAX_ANALOG 255
-bool on = false;
+bool on1 = false;
+bool on2 = false;
 
 void moveForward(float a)
 {
-  digitalWrite(motAdir, HIGH);
-  digitalWrite(motBdir, HIGH);
-  analogWrite(motApwm, a);
-  analogWrite(motBpwm, a);
-}
-void moveBackward(float a)
-{
+  a = constrain(a, 0, 255);
   digitalWrite(motAdir, LOW);
   digitalWrite(motBdir, LOW);
   analogWrite(motApwm, a);
   analogWrite(motBpwm, a);
 }
+void moveBackward(float a)
+{
+  a = abs(a);
+  a = constrain(a, 0, 255);
+  digitalWrite(motAdir, HIGH);
+  digitalWrite(motBdir, HIGH);
+  analogWrite(motApwm, a);
+  analogWrite(motBpwm, a);
+}
+void stopRobot()
+{
+  analogWrite(motApwm, 0);
+  analogWrite(motBpwm, 0);
+}
 void messageCb(const geometry_msgs::Twist& vel)
 {
   float x, z;
   x = vel.linear.x;
-  x = round(x);
   z = vel.angular.z;
+  x = round(x);
+  
   if(x > 0)
   {
-    if(on != true)
+    if(on1 != true)
     {
-        digitalWrite(motAdir, HIGH);
-        digitalWrite(motBdir, HIGH);
-        analogWrite(motApwm, x);
-        analogWrite(motBpwm, x);
+      moveForward(x);
     }
     else
     {
-      on == true;
+      on1 == true;
+    }
+  }
+  else if(x < 0)
+  {
+    if(on2 != true)
+    {
+      moveBackward(x);
+    }
+    else
+    {
+      on2 == true;
     }
   }
   else
   {
-    analogWrite(motApwm, 0);
-    analogWrite(motBpwm, 0);
+    stopRobot();
   }
 }
 ros::NodeHandle  nh;
