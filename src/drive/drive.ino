@@ -1,4 +1,4 @@
-#include <math.h>
+#include<math.h>
 //#include "readPinFast.h"
 //#include "enc_1.h"
 #include "mot_1.h"
@@ -10,25 +10,45 @@
 
 #define MAX_VEL 0.05625
 #define MAX_ANALOG 255
-bool on1 = false;
-bool on2 = false;
 
-void moveForward(float a)
+
+float lval;
+float rval;
+float s_inc;
+
+void moveRobot(float x, float z)
 {
-  a = constrain(a, 0, 255);
-  digitalWrite(motAdir, LOW);
-  digitalWrite(motBdir, LOW);
-  analogWrite(motApwm, a);
-  analogWrite(motBpwm, a);
+  x = abs(x);
+  x = constrain(x, 0, 255);
+  z = constrain(z, -255, 255);
+  
+  if(z > 0)
+  {
+    z = abs(z);
+    rval = 1;
+    lval = (255-z)/255;
+  }
+  else if(z < 0)
+  {
+    z = abs(z);
+    rval = (255-z)/255;
+    lval = 1;
+  }
+  else
+  {
+    lval = 1;
+    rval = 1;
+  }
+
+  analogWrite(motApwm, x*rval);
+  analogWrite(motBpwm, x*lval);
 }
-void moveBackward(float a)
+void twistRobot(int z)
 {
-  a = abs(a);
-  a = constrain(a, 0, 255);
-  digitalWrite(motAdir, HIGH);
-  digitalWrite(motBdir, HIGH);
-  analogWrite(motApwm, a);
-  analogWrite(motBpwm, a);
+  z = abs(z);
+  z = constrain(z, 0, 255);
+  analogWrite(motApwm, z);
+  analogWrite(motBpwm, z);
 }
 void stopRobot()
 {
@@ -41,31 +61,35 @@ void messageCb(const geometry_msgs::Twist& vel)
   x = vel.linear.x;
   z = vel.angular.z;
   x = round(x);
+  z = round(z);
   
   if(x > 0)
   {
-    if(on1 != true)
-    {
-      moveForward(x);
-    }
-    else
-    {
-      on1 == true;
-    }
+    digitalWrite(motAdir, LOW);
+    digitalWrite(motBdir, LOW);
+    moveRobot(x,z);
   }
   else if(x < 0)
   {
-    if(on2 != true)
-    {
-      moveBackward(x);
-    }
-    else
-    {
-      on2 == true;
-    }
+    digitalWrite(motAdir, HIGH);
+    digitalWrite(motBdir, HIGH);
+    moveRobot(x,z);
   }
   else
   {
+    if(z > 0)
+    {
+      digitalWrite(motAdir, LOW);
+      digitalWrite(motBdir, HIGH);
+      twistRobot(z);
+    }
+    else if(z < 0)
+    {
+      digitalWrite(motAdir, HIGH);
+      digitalWrite(motBdir, LOW);
+      twistRobot(z);
+    }
+    else
     stopRobot();
   }
 }
