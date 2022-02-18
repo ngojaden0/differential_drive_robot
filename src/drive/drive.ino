@@ -19,19 +19,19 @@ float s_inc;
 void moveRobot(float x, float z)
 {
   x = abs(x);
-  x = constrain(x, 0, 255);
-  z = constrain(z, -255, 255);
+  x = constrain(x, 0, MAX_ANALOG);
+  z = constrain(z, -1*MAX_ANALOG, MAX_ANALOG);
   
   if(z > 0)
   {
     z = abs(z);
     rval = 1;
-    lval = (255-z)/255;
+    lval = (MAX_ANALOG-z)/MAX_ANALOG;
   }
   else if(z < 0)
   {
     z = abs(z);
-    rval = (255-z)/255;
+    rval = (MAX_ANALOG-z)/MAX_ANALOG;
     lval = 1;
   }
   else
@@ -46,7 +46,7 @@ void moveRobot(float x, float z)
 void twistRobot(int z)
 {
   z = abs(z);
-  z = constrain(z, 0, 255);
+  z = constrain(z, 0, MAX_ANALOG);
   analogWrite(motApwm, z);
   analogWrite(motBpwm, z);
 }
