@@ -1,6 +1,3 @@
-# Used to Drive the Suspension of the Rover wirelessly
-# Oscar Alvarez, 2021
-
 ###### CONTROLS: ######
 # W, A, S, D controls (ask any real gamer)
 # k = go slower ; l = go faster
