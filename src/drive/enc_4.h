@@ -17,7 +17,7 @@ void enc4Setup()
   attachInterrupt(enc4Interrupt, enc4ReadA, RISING); // Executes the function 'encReadA()' at rising edge of signal A from Encoder-4
 }
 
-double getEnc4()
+float getEnc4()
 {
   return enc4Ticks;
 }
