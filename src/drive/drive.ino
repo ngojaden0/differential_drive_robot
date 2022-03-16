@@ -12,12 +12,25 @@
 
 #define MAX_VEL 0.05625
 #define MAX_ANALOG 255
+#define LOOPTIME 100.0
+#define WHEEL_RADIUS 0.0762
+#define RESOLUTION 2048.0
 
 float lval;
 float rval;
-float enc1;
-float enc4;
+float encR;
+float encL;
+float old_encR = 0;
+float old_encL = 0;
+float angular_vel_encR;
+float angular_vel_encL;
+float linear_vel_encR;
+float linear_vel_encL;
+float kp = 1;
+float kd = 0;
+float ki = 0;
 unsigned long lastTime = 0;
+
 void moveRobot(float x, float z)
 {
   x = abs(x);
@@ -107,23 +120,36 @@ void setup()
   nh.advertise(speed_pub);
   motor1Setup();
   motor4Setup();
-  enc1Setup();
-  enc4Setup();
+  encRSetup();
+  encLSetup();
 }
 
 void loop()
 {
   nh.spinOnce();
-  enc1 = getEnc1();
-  enc4 = getEnc4();
-  publishSpeed();
-  delay(100);
+  if((millis()-lastTime) >= LOOPTIME)
+  {
+    encR = getEncR();
+    encL = getEncL();
+    angular_vel_encR = abs(encR-old_encR)/LOOPTIME/RESOLUTION*1000.0*2*M_PI;
+    angular_vel_encL = abs(encL-old_encL)/LOOPTIME/RESOLUTION*1000.0*2*M_PI;
+    if(encR < old_encR)
+      angular_vel_encR = -1*angular_vel_encR;
+    if(encL < old_encL)
+      angular_vel_encL = -1*angular_vel_encL;
+    linear_vel_encR = WHEEL_RADIUS*angular_vel_encR;
+    linear_vel_encL = WHEEL_RADIUS*angular_vel_encL;
+    publishSpeed();
+    old_encR = encR;
+    old_encL = encL;
+  }
+  
 }
 void publishSpeed()
 {
   speed_msg.header.stamp = nh.now();      //timestamp for odometry data
-  speed_msg.vector.x = enc1;
-  speed_msg.vector.y = enc4;
+  speed_msg.vector.x = angular_vel_encR;
+  speed_msg.vector.y = angular_vel_encL;
   speed_pub.publish(&speed_msg);
   nh.spinOnce();
   nh.loginfo("Publishing odometry");

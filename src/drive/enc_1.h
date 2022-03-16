@@ -1,23 +1,23 @@
-#define enc1Interrupt 2    //Interrupt pin number
-#define enc1PinA      21   //Arduino pin number corresponding to interrupt pin
-#define enc1PinB      31   //Digital pin number // Do not use pins 0, 1, 3, 8, 9, 11, 12, 13
-#define enc1Res       2048.0
+#define encRInterrupt 2    //Interrupt pin number
+#define encRPinA      21   //Arduino pin number corresponding to interrupt pin
+#define encRPinB      31   //Digital pin number // Do not use pins 0, 1, 3, 8, 9, 11, 12, 13
+#define encRRes       2048.0
 
-volatile long enc1Ticks = 0;  // Variable used to store encoder ticks
+volatile long encRTicks = 0;  // Variable used to store encoder ticks
 
-void enc1ReadA()
+void encRReadA()
 {
-  enc1Ticks += readPinFast(enc1PinB) ? -1:1;
+  encRTicks += readPinFast(encRPinB) ? -1:1;
 }
 
-void enc1Setup() 
+void encRSetup() 
 {
-  pinMode(enc1PinA, INPUT);      // sets Encoder-1 pin A as input
-  pinMode(enc1PinB, INPUT);      // sets Encoder-1 pin B as input
-  attachInterrupt(enc1Interrupt, enc1ReadA, RISING); // Executes the function 'enc1ReadA()' at rising edge of signal A from Encoder-1
+  pinMode(encRPinA, INPUT);      // sets Encoder-1 pin A as input
+  pinMode(encRPinB, INPUT);      // sets Encoder-1 pin B as input
+  attachInterrupt(encRInterrupt, encRReadA, RISING); // Executes the function 'enc1ReadA()' at rising edge of signal A from Encoder-1
 }
 
-float getEnc1()
+float getEncR()
 {
-  return enc1Ticks;
+  return -1*encRTicks;
 }
