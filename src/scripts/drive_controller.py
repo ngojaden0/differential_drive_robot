@@ -5,7 +5,7 @@ from nav_msgs.msg import Odometry
 from tf import TransformBroadcaster
 
 def callback(speed_msg):
-    rospy.loginfo("right: "+str(speed_msg.vector.x)+"     left: "+str(speed_msg.vector.y))
+    rospy.loginfo("right: "+str(speed_msg.vector.x)+"     left: "+str(speed_msg.vector.y)+"--")
 
 def controller():
     rospy.init_node('drive_controller')
