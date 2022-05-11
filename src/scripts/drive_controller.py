@@ -4,14 +4,21 @@ from math import sin
 from math import cos
 from geometry_msgs.msg import Vector3Stamped
 from nav_msgs.msg import Odometry
-from tf import TransformBroadcaster
+import tf
 from sensor_msgs.msg import JointState
-def callback(speed_msg):
+#callback for actual speed
+def callback(speed_msg): 
     rospy.loginfo("right: "+str(speed_msg.vector.x)+"  left: "+str(speed_msg.vector.y)+"--")
 
+#callback for joint states
 def feedback(simulation_speed):
     rospy.loginfo("simulation: "+str(simulation_speed.position))
 
+#callback for pose/twist
+def getback(odom):
+    rospy.loginfo("\nodom:\n  position:\n    x:"+str(odom.pose.pose.position.x)+
+    "\n"+"    y:"+str(odom.pose.pose.position.y)+"\n")
+    
 def controller():
     rospy.init_node('drive_controller')
     rate = rospy.Rate(10)
@@ -31,7 +38,8 @@ def controller():
 
 
     rospy.Subscriber('speed', Vector3Stamped, callback)
-    rospy.Subscriber('joint_states', JointState, feedback)
+    #rospy.Subscriber('joint_states', JointState, feedback)
+    rospy.Subscriber('odom', Odometry, getback)
     rospy.spin()
     rate.sleep()
 
