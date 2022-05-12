@@ -23,30 +23,35 @@ def callback(speed_msg):
 
 #callback for joint states (gazebo)
 def feedback(simulation_speed):
-    rospy.loginfo("\nsimulation:\n"+"  x:"+str(simulation_speed.position[0])+"\n  y:"+str(simulation_speed.position[1]))
     rad_R = simulation_speed.position[0]
     rad_L = simulation_speed.position[1]
-    global prev_rad_R
-    global prev_rad_L
-    global th, x, y
+    global prev_rad_R, prev_rad_L, th, x, y
     vel_R  = ((rad_R - prev_rad_R)/0.1)*radius
     vel_L  = ((rad_L - prev_rad_L)/0.1)*radius
     vel_avg = (vel_R + vel_L)/2
+    angular_vel = (vel_R - vel_L)/length
     dth = ((vel_R - vel_L)*0.1)/length
     dxy = vel_avg*0.1
     dx = dxy*cos(dth)
     dy = dxy*sin(dth)
+
     x += (cos(th)*dx-sin(th)*dy)
     y += (sin(th)*dx+cos(th)*dy)
     th += dth
-    print(" "+str(vel_R)+" "+str(vel_L)+"   ")
-    print("\n"+str(x)+" "+str(y)+" "+str(th)) 
+
     prev_rad_R = rad_R
     prev_rad_L = rad_L
     if th >= 2*pi: 
         th -= 2*pi
     if th <= -2*pi: 
         th += 2*pi
+
+    rospy.loginfo("\nvelocity:\n"+"  right_wheel (m/s):"+
+        str(vel_R)+"\n  left_wheel (m/s):"+
+        str(vel_L)+"\n  total_direction (m/s):"+
+        str(vel_avg)+"\n  angular (rad/s):"+
+        str(angular_vel)+"\npose:\n  x (m):"+
+        str(x)+"\n  y (m):"+str(y)+"\n  theta (rad):"+str(th)+"\n")
 
 #callback for pose/twist (gazebo)
 def getback(odom):
