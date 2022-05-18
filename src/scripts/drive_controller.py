@@ -32,7 +32,7 @@ def feedback(simulation_speed):
     vel_L  = ((rad_L - prev_rad_L)/0.1)*radius
     vel_avg = (vel_R + vel_L)/2
     angular_vel = (vel_R - vel_L)/length
-    dth = ((vel_R - vel_L)*0.1)/length
+    dth = ((vel_R - vel_L)*0.1)/length*(6.28/6.98)
     dxy = vel_avg*0.1
     dx = dxy*cos(dth)
     dy = dxy*sin(dth)
@@ -43,13 +43,13 @@ def feedback(simulation_speed):
 
     prev_rad_R = rad_R
     prev_rad_L = rad_L
-    if th >= 2*pi: 
-        th -= 2*pi
-    if th <= -2*pi: 
-        th += 2*pi
+    if th >= 6.28: 
+        th -= 6.28
+    if th <= -6.28: 
+        th += 6.28
 
     br = tf.TransformBroadcaster()
-    br.sendTransform((x,y,0),tf.transformations.quarternion_from_euler(0,0,th),rospy.Time.now(),"robot","odometry")
+    br.sendTransform((x,y,0),tf.transformations.quaternion_from_euler(0,0,th*(6.28/6.98)),rospy.Time.now(),"robot","odom")
 
     rospy.loginfo("\nvelocity:\n"+"  right_wheel (m/s):"+
         str(vel_R)+"\n  left_wheel (m/s):"+
