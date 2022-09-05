@@ -1,6 +1,4 @@
 #! /usr/bin/env python3
-from cmath import pi
-from requests import NullHandler
 import rospy
 from math import sin
 from math import cos
