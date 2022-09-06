@@ -33,14 +33,6 @@
         <mesh
           filename="package://ddr_urdf/meshes/base_link.STL" />
       </geometry>
-      <surface>
-        <friction>
-          <ode>
-            <mu>0.001</mu>
-            <mu2>0.001</mu2>
-          </ode>
-        </friction>
-      </surface>
     </collision>
   </link>
   <link
