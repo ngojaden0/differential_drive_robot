@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <robot name="ddr_urdf" xmlns:xacro="http://ros.org/wiki/xacro">
-  <link
-    name="base_link">
+  <link  name="base_link">
     <inertial>
       <origin
         xyz="0.0181995182140738 -3.2612801348364E-16 -0.00276660416271973"
         rpy="0 0 0" />
       <mass
-        value="0.443722021822356" />
+        value="3" />
       <inertia
         ixx="0.000696660783343318"
         ixy="-4.10541788338937E-18"
@@ -33,10 +32,23 @@
         <mesh
           filename="package://ddr_urdf/meshes/base_link.STL" />
       </geometry>
+      <surface>
+        <friction>
+          <ode>
+            <mu>0</mu>
+            <mu2>0</mu2>
+          </ode>
+        </friction>
+        <contact>
+          <ode>
+            <kp>0</kp>
+            <kd>0</kd>
+          </ode>
+        </contact>
+      </surface>
     </collision>
   </link>
-  <link
-    name="left_wheel">
+  <link name="left_wheel">
     <inertial>
       <origin
         xyz="-5.55111512312578E-16 -0.003175 5.96744875736022E-16"
@@ -91,8 +103,7 @@
     <axis
       xyz="0 1 0" />
   </joint>
-  <link
-    name="right_wheel">
+  <link name="right_wheel">
     <inertial>
       <origin
         xyz="2.77555756156289E-17 0.00317500000000001 -7.63278329429795E-17"
@@ -233,7 +244,7 @@
       <!-- Diameter of the wheels, in meters, defaults to 0.15 m -->
       <wheelDiameter>0.0762</wheelDiameter>
       <!-- Maximum torque which the wheels can produce, in Nm, defaults to 5 Nm -->
-      <wheelTorque>5</wheelTorque>
+      <wheelTorque>0.5</wheelTorque>
       <!-- Topic to receive geometry_msgs/Twist message commands, defaults to `cmd_vel` -->
       <commandTopic>cmd_vel</commandTopic>
       <!-- Topic to publish nav_msgs/Odometry messages, defaults to `odom` -->
